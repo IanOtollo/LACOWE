@@ -1,0 +1,24 @@
+        // Total Members
+        $sql = "SELECT COUNT(*) FROM members WHERE membership_status = 'Active'";
+        $stmt = $db->getConnection()->query($sql);
+        $totalMembers = (int)($stmt->fetchColumn() ?? 0);
+        
+        // Active Members (same as total)
+        $activeMembers = $totalMembers;
+        
+        // Active Loans
+        $sql = "SELECT COUNT(*) FROM loans WHERE loan_status = 'Active'";
+        $loansStmt = $db->getConnection()->query($sql);
+        $activeLoans = (int)($loansStmt->fetchColumn() ?? 0);
+        
+        // Outstanding Balance
+        $sql = "SELECT COALESCE(SUM(balance), 0) FROM loans WHERE loan_status = 'Active'";
+        $balanceStmt = $db->getConnection()->query($sql);
+        $outstandingBalance = (float)($balanceStmt->fetchColumn() ?? 0);
+        
+        $stats = [
+            'total_members' => $totalMembers,
+            'active_members' => $activeMembers,
+            'active_loans' => $activeLoans,
+            'outstanding_balance' => $outstandingBalance
+        ];
