@@ -56,4 +56,5 @@ date_default_timezone_set('Africa/Nairobi');
 
 // Session Configuration
 require_once __DIR__ . '/../includes/Session.php';
+require_once __DIR__ . '/../includes/helpers.php';
 Session::start();

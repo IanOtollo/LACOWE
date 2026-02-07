@@ -1,7 +1,6 @@
 <?php
 require_once 'config/config.php';
 require_once 'includes/Auth.php';
-require_once 'includes/helpers.php';
 require_once 'models/Member.php';
 
 Auth::requireRole([1, 2, 3]);

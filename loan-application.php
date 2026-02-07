@@ -1,7 +1,5 @@
 <?php
-require_once 'config/config.php';
 require_once 'includes/Auth.php';
-require_once 'includes/helpers.php';
 
 Auth::requireAuth();
 Auth::requireRole([4]); // Members only
