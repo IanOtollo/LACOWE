@@ -14,15 +14,25 @@ class Session
     public static function start()
     {
         if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+            // Detect HTTPS
+            $isSecure = false;
+            if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')) {
+                $isSecure = true;
+            }
+
             // Set session cookie parameters for security
             session_set_cookie_params([
                 'lifetime' => 0,
                 'path' => '/',
                 'domain' => '',
-                'secure' => false, // Set to true if using HTTPS
+                'secure' => $isSecure,
                 'httponly' => true,
                 'samesite' => 'Lax'
             ]);
+
+            // For Vercel/Serverless: cache limiter can sometimes interfere
+            session_cache_limiter('nocache');
+
             session_start();
         }
     }

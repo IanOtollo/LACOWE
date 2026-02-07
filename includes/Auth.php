@@ -67,7 +67,12 @@ class Auth
 
             $this->updateLastLogin($user['user_id']);
             Session::setUser($user);
-            Session::regenerate();
+
+            // Only regenerate if not in a restricted environment 
+            // Vercel sometimes loses session on immediate regeneration
+            if (session_status() === PHP_SESSION_ACTIVE && !headers_sent()) {
+                Session::regenerate();
+            }
 
             return [
                 'success' => true,
@@ -96,8 +101,7 @@ class Auth
     public static function requireAuth()
     {
         if (!self::isAuthenticated()) {
-            header('Location: login.php');
-            exit();
+            redirect('login.php');
         }
     }
 
@@ -114,8 +118,7 @@ class Auth
         self::requireAuth();
         if (!self::hasRole($allowedRoles)) {
             Session::flash('error', 'No permission');
-            header('Location: dashboard.php');
-            exit();
+            redirect('dashboard.php');
         }
     }
 

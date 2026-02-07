@@ -8,10 +8,9 @@ require_once 'config/config.php';
 
 
 if (Session::isLoggedIn()) {
-    header('Location: dashboard.php');
+    redirect('dashboard.php');
 }
 else {
-    header('Location: login.php');
+    redirect('login.php');
 }
-exit();
 ?>
