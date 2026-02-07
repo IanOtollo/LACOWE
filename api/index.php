@@ -12,7 +12,7 @@ $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // 3. Handle the root path
 if ($uri === '/' || $uri === '' || $uri === '/index.php') {
-    require 'index.php';
+    require_once 'index.php';
     exit;
 }
 
@@ -21,7 +21,7 @@ $requestedFile = ltrim($uri, '/');
 
 // Security check: only allow PHP files from the root directory
 if (preg_match('/\.php$/', $requestedFile) && file_exists($requestedFile)) {
-    require $requestedFile;
+    require_once $requestedFile;
 }
 else {
     // If no file matches, fallback to index.php or show 404

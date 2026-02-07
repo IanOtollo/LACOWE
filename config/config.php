@@ -28,17 +28,24 @@ define('UPLOAD_MAX_SIZE', 5242880); // 5MB in bytes
 define('ALLOWED_FILE_TYPES', ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png']);
 
 // Pagination
-define('RECORDS_PER_PAGE', 20);
+if (!defined('RECORDS_PER_PAGE'))
+    define('RECORDS_PER_PAGE', 20);
 
 // Date Format
-define('DATE_FORMAT', 'Y-m-d');
-define('DATETIME_FORMAT', 'Y-m-d H:i:s');
-define('DISPLAY_DATE_FORMAT', 'd-m-Y');
-define('DISPLAY_DATETIME_FORMAT', 'd-m-Y H:i:s');
+if (!defined('DATE_FORMAT'))
+    define('DATE_FORMAT', 'Y-m-d');
+if (!defined('DATETIME_FORMAT'))
+    define('DATETIME_FORMAT', 'Y-m-d H:i:s');
+if (!defined('DISPLAY_DATE_FORMAT'))
+    define('DISPLAY_DATE_FORMAT', 'd-m-Y');
+if (!defined('DISPLAY_DATETIME_FORMAT'))
+    define('DISPLAY_DATETIME_FORMAT', 'd-m-Y H:i:s');
 
 // Currency
-define('CURRENCY_SYMBOL', 'KES');
-define('CURRENCY_DECIMAL_PLACES', 2);
+if (!defined('CURRENCY_SYMBOL'))
+    define('CURRENCY_SYMBOL', 'KES');
+if (!defined('CURRENCY_DECIMAL_PLACES'))
+    define('CURRENCY_DECIMAL_PLACES', 2);
 
 // Error Reporting (Change to 0 in production)
 error_reporting(E_ALL);
@@ -48,8 +55,8 @@ ini_set('display_errors', 1);
 date_default_timezone_set('Africa/Nairobi');
 
 // Session Configuration
-ini_set('session.cookie_httponly', 1);
-ini_set('session.use_only_cookies', 1);
-ini_set('session.cookie_secure', 0); // Set to 1 if using HTTPS
-
-?>
+if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.cookie_secure', 0); // Set to 1 if using HTTPS
+}
