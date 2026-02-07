@@ -1,4 +1,6 @@
 <?php
+ob_start();
+
 /**
  * Vercel Serverless Entry Point (Router)
  * This script bridges the Vercel /api requirement to the root project.
