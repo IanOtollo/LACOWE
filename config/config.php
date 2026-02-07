@@ -5,12 +5,12 @@
  */
 
 // Database Configuration
-define('DB_DRIVER', 'mysql'); // 'mysql' (Local) or 'pgsql' (Supabase/Production)
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'lacowe_welfare_mis');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_PORT', '5432'); // Default for PostgreSQL
+define('DB_DRIVER', getenv('DB_DRIVER') ?: 'mysql'); // 'mysql' (Local) or 'pgsql' (Supabase/Production)
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'lacowe_welfare_mis');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') ?: '');
+define('DB_PORT', getenv('DB_PORT') ?: '5432'); // Default for PostgreSQL
 
 // Application Configuration
 define('APP_NAME', 'LACOWE Welfare MIS');
