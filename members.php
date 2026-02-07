@@ -1,7 +1,6 @@
 <?php
 require_once 'config/config.php';
 require_once 'includes/Auth.php';
-require_once 'includes/Session.php';
 require_once 'includes/helpers.php';
 require_once 'models/Member.php';
 
@@ -48,9 +47,9 @@ include 'views/layouts/header.php';
                 <div class="col" style="flex: 0 0 calc(25% - 0.5rem); margin-right: 1rem;">
                     <select name="status" class="form-control">
                         <option value="">All Status</option>
-                        <option value="Active" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Active') ? 'selected' : ''; ?>>Active</option>
-                        <option value="Suspended" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Suspended') ? 'selected' : ''; ?>>Suspended</option>
-                        <option value="Inactive" <?php echo (isset($_GET['status']) && $_GET['status'] == 'Inactive') ? 'selected' : ''; ?>>Inactive</option>
+                        <option value="Active" <?php echo(isset($_GET['status']) && $_GET['status'] == 'Active') ? 'selected' : ''; ?>>Active</option>
+                        <option value="Suspended" <?php echo(isset($_GET['status']) && $_GET['status'] == 'Suspended') ? 'selected' : ''; ?>>Suspended</option>
+                        <option value="Inactive" <?php echo(isset($_GET['status']) && $_GET['status'] == 'Inactive') ? 'selected' : ''; ?>>Inactive</option>
                     </select>
                 </div>
                 <div class="col" style="flex: 0 0 calc(25% - 0.5rem);">
@@ -91,12 +90,15 @@ include 'views/layouts/header.php';
                                     <a href="member-edit.php?id=<?php echo $member['member_id']; ?>" class="btn btn-sm btn-primary">Edit</a>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
+                        <?php
+    endforeach; ?>
+                    <?php
+else: ?>
                         <tr>
                             <td colspan="8" class="text-center" style="padding: 2rem; color: var(--gray-500);">No members found</td>
                         </tr>
-                    <?php endif; ?>
+                    <?php
+endif; ?>
                 </tbody>
             </table>
         </div>

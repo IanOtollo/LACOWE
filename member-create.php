@@ -1,7 +1,6 @@
 <?php
 require_once 'config/config.php';
 require_once 'includes/Auth.php';
-require_once 'includes/Session.php';
 require_once 'includes/helpers.php';
 require_once 'models/Member.php';
 
@@ -16,23 +15,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate required fields
     $required = ['first_name', 'last_name', 'id_number', 'phone_number', 'username', 'email', 'password'];
     $errors = validateRequired($required, $_POST);
-    
+
     if (empty($errors)) {
         // Check if ID number exists
         if ($memberModel->idNumberExists($_POST['id_number'])) {
             $errors[] = 'ID number already exists';
         }
-        
+
         // Validate phone number
         if (!isValidPhone($_POST['phone_number'])) {
             $errors[] = 'Invalid phone number format';
         }
-        
+
         // Validate email
         if (!isValidEmail($_POST['email'])) {
             $errors[] = 'Invalid email format';
         }
-        
+
         if (empty($errors)) {
             try {
                 // Create user first
@@ -42,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_POST['password'],
                     4 // Member role
                 );
-                
+
                 if ($userResult['success']) {
                     // Create member
                     $memberData = [
@@ -62,19 +61,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'payroll_number' => sanitize($_POST['payroll_number'] ?? ''),
                         'date_joined' => date('Y-m-d')
                     ];
-                    
+
                     $result = $memberModel->create($memberData);
-                    
+
                     if ($result['success']) {
                         Session::flash('success', 'Member registered successfully!', 'success');
                         redirect('members.php');
-                    } else {
+                    }
+                    else {
                         $errors[] = $result['message'];
                     }
-                } else {
+                }
+                else {
                     $errors[] = $userResult['message'];
                 }
-            } catch (Exception $e) {
+            }
+            catch (Exception $e) {
                 $errors[] = 'Registration failed. Please try again.';
             }
         }
@@ -97,10 +99,12 @@ include 'views/layouts/header.php';
                 <div>
                     <?php foreach ($errors as $error): ?>
                         <div><?php echo htmlspecialchars($error); ?></div>
-                    <?php endforeach; ?>
+                    <?php
+    endforeach; ?>
                 </div>
             </div>
-        <?php endif; ?>
+        <?php
+endif; ?>
         
         <form method="POST" action="">
             <h4>Personal Information</h4>
@@ -151,9 +155,9 @@ include 'views/layouts/header.php';
                         <label class="form-label">Gender</label>
                         <select name="gender" class="form-control">
                             <option value="">Select Gender</option>
-                            <option value="Male" <?php echo (isset($_POST['gender']) && $_POST['gender'] == 'Male') ? 'selected' : ''; ?>>Male</option>
-                            <option value="Female" <?php echo (isset($_POST['gender']) && $_POST['gender'] == 'Female') ? 'selected' : ''; ?>>Female</option>
-                            <option value="Other" <?php echo (isset($_POST['gender']) && $_POST['gender'] == 'Other') ? 'selected' : ''; ?>>Other</option>
+                            <option value="Male" <?php echo(isset($_POST['gender']) && $_POST['gender'] == 'Male') ? 'selected' : ''; ?>>Male</option>
+                            <option value="Female" <?php echo(isset($_POST['gender']) && $_POST['gender'] == 'Female') ? 'selected' : ''; ?>>Female</option>
+                            <option value="Other" <?php echo(isset($_POST['gender']) && $_POST['gender'] == 'Other') ? 'selected' : ''; ?>>Other</option>
                         </select>
                     </div>
                 </div>

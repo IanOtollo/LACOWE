@@ -1,11 +1,6 @@
 <?php
 require_once 'config/config.php';
 require_once 'includes/Auth.php';
-require_once 'includes/Session.php';
-require_once 'includes/helpers.php';
-
-Session::start();
-
 // Redirect if already logged in
 if (Session::isLoggedIn()) {
     redirect('dashboard.php');

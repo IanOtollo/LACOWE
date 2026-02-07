@@ -5,9 +5,8 @@ require_once 'includes/Database.php';
 require_once 'includes/Session.php';
 require_once 'includes/helpers.php';
 
-Auth::requireAuth();
+Auth::requireAuth(); // Ensures user is logged in and session is started
 Auth::requireRole([1, 2, 3]); // Admin only
-Session::start();
 
 $pageTitle = 'Reports';
 $db = new Database();

@@ -2,12 +2,10 @@
 require_once 'config/config.php';
 require_once 'includes/Auth.php';
 require_once 'includes/Database.php';
-require_once 'includes/Session.php';
 require_once 'includes/helpers.php';
 
 Auth::requireAuth();
 Auth::requireRole([1]); // Super Admin only
-Session::start();
 
 $pageTitle = 'User Management';
 $db = new Database();

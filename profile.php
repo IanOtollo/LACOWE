@@ -2,11 +2,9 @@
 require_once 'config/config.php';
 require_once 'includes/Auth.php';
 require_once 'includes/Database.php';
-require_once 'includes/Session.php';
 require_once 'includes/helpers.php';
 
 Auth::requireAuth();
-Session::start();
 
 $pageTitle = 'My Profile';
 $db = new Database();

@@ -1,7 +1,6 @@
 <?php
 require_once 'config/config.php';
 require_once 'includes/Auth.php';
-require_once 'includes/Session.php';
 require_once 'includes/helpers.php';
 require_once 'models/Loan.php';
 
@@ -13,13 +12,14 @@ $loanModel = new Loan();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $applicationId = (int)$_POST['application_id'];
     $userId = Session::getUserId();
-    
+
     if ($_POST['action'] === 'approve') {
         $result = $loanModel->approveApplication($applicationId, $userId, $_POST['comments'] ?? '');
-    } else {
+    }
+    else {
         $result = $loanModel->rejectApplication($applicationId, $userId, $_POST['comments'] ?? '');
     }
-    
+
     Session::flash('success', $result['message'], $result['success'] ? 'success' : 'danger');
     redirect('loans.php');
 }
@@ -42,9 +42,9 @@ include 'views/layouts/header.php';
     <div class="card-header d-flex justify-content-between align-items-center">
         <h3 style="margin: 0;">Loan Applications</h3>
         <div class="d-flex gap-2">
-            <a href="?status=Pending" class="btn btn-sm btn-outline <?php echo (isset($_GET['status']) && $_GET['status'] == 'Pending') ? 'btn-primary' : ''; ?>">Pending</a>
-            <a href="?status=Approved" class="btn btn-sm btn-outline <?php echo (isset($_GET['status']) && $_GET['status'] == 'Approved') ? 'btn-success' : ''; ?>">Approved</a>
-            <a href="?status=Rejected" class="btn btn-sm btn-outline <?php echo (isset($_GET['status']) && $_GET['status'] == 'Rejected') ? 'btn-danger' : ''; ?>">Rejected</a>
+            <a href="?status=Pending" class="btn btn-sm btn-outline <?php echo(isset($_GET['status']) && $_GET['status'] == 'Pending') ? 'btn-primary' : ''; ?>">Pending</a>
+            <a href="?status=Approved" class="btn btn-sm btn-outline <?php echo(isset($_GET['status']) && $_GET['status'] == 'Approved') ? 'btn-success' : ''; ?>">Approved</a>
+            <a href="?status=Rejected" class="btn btn-sm btn-outline <?php echo(isset($_GET['status']) && $_GET['status'] == 'Rejected') ? 'btn-danger' : ''; ?>">Rejected</a>
             <a href="loans.php" class="btn btn-sm btn-outline">All</a>
         </div>
     </div>
@@ -82,17 +82,22 @@ include 'views/layouts/header.php';
                                                 class="btn btn-sm btn-success">Approve</button>
                                         <button onclick="showApprovalModal(<?php echo $app['application_id']; ?>, 'reject')" 
                                                 class="btn btn-sm btn-danger">Reject</button>
-                                    <?php else: ?>
+                                    <?php
+        else: ?>
                                         <button class="btn btn-sm btn-info" onclick="viewApplication(<?php echo $app['application_id']; ?>)">View</button>
-                                    <?php endif; ?>
+                                    <?php
+        endif; ?>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
+                        <?php
+    endforeach; ?>
+                    <?php
+else: ?>
                         <tr>
                             <td colspan="8" class="text-center" style="padding: 2rem; color: var(--gray-500);">No loan applications found</td>
                         </tr>
-                    <?php endif; ?>
+                    <?php
+endif; ?>
                 </tbody>
             </table>
         </div>

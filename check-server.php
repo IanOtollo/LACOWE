@@ -20,7 +20,7 @@ echo "Attempting to connect to: " . DB_HOST . " (Database: " . DB_NAME . ")<br>"
 try {
     $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
     $options = [
-        PDO::ATTR_ERRMODE => PDO::ATTR_ERRMODE_EXCEPTION,
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
     ];

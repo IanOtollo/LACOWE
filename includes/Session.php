@@ -5,13 +5,24 @@
  * LACOWE Welfare MIS
  */
 
-class Session {
-    
+class Session
+{
+
     /**
      * Start session if not already started
      */
-    public static function start() {
-        if (session_status() === PHP_SESSION_NONE) {
+    public static function start()
+    {
+        if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+            // Set session cookie parameters for security
+            session_set_cookie_params([
+                'lifetime' => 0,
+                'path' => '/',
+                'domain' => '',
+                'secure' => false, // Set to true if using HTTPS
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ]);
             session_start();
         }
     }
@@ -19,7 +30,8 @@ class Session {
     /**
      * Set session variable
      */
-    public static function set($key, $value) {
+    public static function set($key, $value)
+    {
         self::start();
         $_SESSION[$key] = $value;
     }
@@ -27,7 +39,8 @@ class Session {
     /**
      * Get session variable
      */
-    public static function get($key, $default = null) {
+    public static function get($key, $default = null)
+    {
         self::start();
         return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
     }
@@ -35,7 +48,8 @@ class Session {
     /**
      * Check if session variable exists
      */
-    public static function has($key) {
+    public static function has($key)
+    {
         self::start();
         return isset($_SESSION[$key]);
     }
@@ -43,7 +57,8 @@ class Session {
     /**
      * Remove session variable
      */
-    public static function remove($key) {
+    public static function remove($key)
+    {
         self::start();
         if (isset($_SESSION[$key])) {
             unset($_SESSION[$key]);
@@ -53,7 +68,8 @@ class Session {
     /**
      * Destroy session
      */
-    public static function destroy() {
+    public static function destroy()
+    {
         self::start();
         session_unset();
         session_destroy();
@@ -62,7 +78,8 @@ class Session {
     /**
      * Set flash message
      */
-    public static function flash($key, $message, $type = 'info') {
+    public static function flash($key, $message, $type = 'info')
+    {
         self::set('flash_' . $key, [
             'message' => $message,
             'type' => $type
@@ -72,7 +89,8 @@ class Session {
     /**
      * Get and remove flash message
      */
-    public static function getFlash($key) {
+    public static function getFlash($key)
+    {
         $flash = self::get('flash_' . $key);
         self::remove('flash_' . $key);
         return $flash;
@@ -81,35 +99,40 @@ class Session {
     /**
      * Check if user is logged in
      */
-    public static function isLoggedIn() {
+    public static function isLoggedIn()
+    {
         return self::has('user_id') && self::has('role_id');
     }
 
     /**
      * Get logged in user ID
      */
-    public static function getUserId() {
+    public static function getUserId()
+    {
         return self::get('user_id');
     }
 
     /**
      * Get logged in user role
      */
-    public static function getUserRole() {
+    public static function getUserRole()
+    {
         return self::get('role_id');
     }
 
     /**
      * Get logged in user name
      */
-    public static function getUserName() {
+    public static function getUserName()
+    {
         return self::get('username');
     }
 
     /**
      * Set user session data
      */
-    public static function setUser($userData) {
+    public static function setUser($userData)
+    {
         self::set('user_id', $userData['user_id']);
         self::set('username', $userData['username']);
         self::set('email', $userData['email']);
@@ -121,7 +144,8 @@ class Session {
     /**
      * Clear user session data
      */
-    public static function clearUser() {
+    public static function clearUser()
+    {
         self::remove('user_id');
         self::remove('username');
         self::remove('email');
@@ -133,7 +157,8 @@ class Session {
     /**
      * Regenerate session ID for security
      */
-    public static function regenerate() {
+    public static function regenerate()
+    {
         self::start();
         session_regenerate_id(true);
     }
@@ -141,7 +166,8 @@ class Session {
     /**
      * Get CSRF token
      */
-    public static function getCsrfToken() {
+    public static function getCsrfToken()
+    {
         if (!self::has('csrf_token')) {
             self::set('csrf_token', bin2hex(random_bytes(32)));
         }
@@ -151,7 +177,8 @@ class Session {
     /**
      * Verify CSRF token
      */
-    public static function verifyCsrfToken($token) {
+    public static function verifyCsrfToken($token)
+    {
         return hash_equals(self::getCsrfToken(), $token);
     }
 }

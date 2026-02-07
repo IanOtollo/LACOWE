@@ -4,22 +4,24 @@ require_once 'includes/Auth.php';
 require_once 'includes/Session.php';
 require_once 'includes/helpers.php';
 
-Session::start();
-if (Session::isLoggedIn()) redirect('dashboard.php');
+if (Session::isLoggedIn())
+    redirect('dashboard.php');
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = sanitize($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
-    
+
     if (empty($username) || empty($password)) {
         $error = 'Please enter both username and password';
-    } else {
+    }
+    else {
         $auth = new Auth();
         $result = $auth->login($username, $password);
         if ($result['success']) {
             redirect('dashboard.php');
-        } else {
+        }
+        else {
             $error = $result['message'];
         }
     }
@@ -118,7 +120,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <span class="alert-icon">✕</span>
                         <span><?php echo $error; ?></span>
                     </div>
-                <?php endif; ?>
+                <?php
+endif; ?>
                 
                 <form method="POST" action="">
                     <div class="form-group">
