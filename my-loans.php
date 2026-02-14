@@ -858,7 +858,7 @@ else: ?>
                         <button class="btn btn-sm btn-primary" onclick="viewLoanDetails(<?php echo $loan['loan_id']; ?>)">
                             <i class="fas fa-eye"></i> View Details
                         </button>
-                        <?php if ($loan['status'] == 'Active'): ?>
+                        <?php if ($loan['loan_status'] == 'Active'): ?>
                             <button class="btn btn-sm btn-success" onclick="makePayment(<?php echo $loan['loan_id']; ?>)">
                                 <i class="fas fa-money-bill"></i> Make Payment
                             </button>
@@ -902,14 +902,14 @@ else: ?>
                         </div>
                     </div>
                     <span class="badge badge-<?php
-        echo $app['status'] == 'Approved' ? 'success' :
-            ($app['status'] == 'Rejected' ? 'danger' : 'warning');
+        echo $app['application_status'] == 'Approved' ? 'success' :
+            ($app['application_status'] == 'Rejected' ? 'danger' : 'warning');
 ?>">
                         <i class="fas fa-<?php
-        echo $app['status'] == 'Approved' ? 'check-circle' :
-            ($app['status'] == 'Rejected' ? 'times-circle' : 'clock');
+        echo $app['application_status'] == 'Approved' ? 'check-circle' :
+            ($app['application_status'] == 'Rejected' ? 'times-circle' : 'clock');
 ?>"></i>
-                        <?php echo htmlspecialchars($app['status']); ?>
+                        <?php echo htmlspecialchars($app['application_status']); ?>
                     </span>
                 </div>
                 
@@ -921,7 +921,7 @@ else: ?>
                     
                     <div class="loan-detail-item">
                         <div class="loan-detail-label">Period</div>
-                        <div class="loan-detail-value"><?php echo $app['repayment_period_months']; ?> months</div>
+                        <div class="loan-detail-value"><?php echo $app['repayment_period']; ?> months</div>
                     </div>
                     
                     <?php if (!empty($app['approved_amount']) && $app['status'] == 'Approved'): ?>
@@ -935,11 +935,11 @@ else: ?>
         endif; ?>
                 </div>
                 
-                <?php if (!empty($app['purpose'])): ?>
+                <?php if (!empty($app['loan_purpose'])): ?>
                     <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--gray-200);">
                         <div style="font-size: 0.75rem; color: var(--gray-500); margin-bottom: 0.25rem;">PURPOSE</div>
                         <div style="font-size: 0.875rem; color: var(--gray-700);">
-                            <?php echo htmlspecialchars($app['purpose']); ?>
+                            <?php echo htmlspecialchars($app['loan_purpose']); ?>
                         </div>
                     </div>
                 <?php

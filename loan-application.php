@@ -58,14 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = $loanModel->createApplication([
                 'member_id' => $memberId,
                 'loan_type' => $loanType,
-                'amount' => $amount,
-                'purpose' => $purpose,
+                'amount_requested' => $amount,
+                'loan_purpose' => $purpose,
                 'repayment_period' => $repaymentPeriod,
-                'interest_rate' => $interestRate,
-                'status' => 'Pending'
+                'interest_rate' => $interestRate
             ]);
 
-            if ($result) {
+            if ($result['success']) {
                 Session::flash('success', 'Loan application submitted successfully! You will be notified once it is reviewed.');
                 redirect('my-loans.php');
             }
