@@ -7,17 +7,20 @@
 
 require_once __DIR__ . '/../includes/Database.php';
 
-class Member {
+class Member
+{
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = new Database();
     }
 
     /**
      * Create new member
      */
-    public function create($data) {
+    public function create($data)
+    {
         try {
             $this->db->beginTransaction();
 
@@ -33,24 +36,24 @@ class Member {
                            :employment_status, :department, :payroll_number, :date_joined, :membership_status)";
 
             $this->db->query($sql)
-                    ->bind(':user_id', $data['user_id'])
-                    ->bind(':member_number', $memberNumber)
-                    ->bind(':first_name', $data['first_name'])
-                    ->bind(':last_name', $data['last_name'])
-                    ->bind(':id_number', $data['id_number'])
-                    ->bind(':phone_number', $data['phone_number'])
-                    ->bind(':email', $data['email'] ?? null)
-                    ->bind(':date_of_birth', $data['date_of_birth'] ?? null)
-                    ->bind(':gender', $data['gender'] ?? null)
-                    ->bind(':address', $data['address'] ?? null)
-                    ->bind(':city', $data['city'] ?? null)
-                    ->bind(':postal_code', $data['postal_code'] ?? null)
-                    ->bind(':employment_status', $data['employment_status'] ?? 'Active')
-                    ->bind(':department', $data['department'] ?? null)
-                    ->bind(':payroll_number', $data['payroll_number'] ?? null)
-                    ->bind(':date_joined', $data['date_joined'] ?? date('Y-m-d'))
-                    ->bind(':membership_status', 'Active')
-                    ->execute();
+                ->bind(':user_id', $data['user_id'])
+                ->bind(':member_number', $memberNumber)
+                ->bind(':first_name', $data['first_name'])
+                ->bind(':last_name', $data['last_name'])
+                ->bind(':id_number', $data['id_number'])
+                ->bind(':phone_number', $data['phone_number'])
+                ->bind(':email', $data['email'] ?? null)
+                ->bind(':date_of_birth', $data['date_of_birth'] ?? null)
+                ->bind(':gender', $data['gender'] ?? null)
+                ->bind(':address', $data['address'] ?? null)
+                ->bind(':city', $data['city'] ?? null)
+                ->bind(':postal_code', $data['postal_code'] ?? null)
+                ->bind(':employment_status', $data['employment_status'] ?? 'Active')
+                ->bind(':department', $data['department'] ?? null)
+                ->bind(':payroll_number', $data['payroll_number'] ?? null)
+                ->bind(':date_joined', $data['date_joined'] ?? date('Y-m-d'))
+                ->bind(':membership_status', 'Active')
+                ->execute();
 
             $memberId = $this->db->lastInsertId();
 
@@ -58,12 +61,12 @@ class Member {
             $accountNumber = $this->generateAccountNumber();
             $accountSql = "INSERT INTO accounts (member_id, account_number, account_type, date_opened, account_status)
                           VALUES (:member_id, :account_number, 'Savings', :date_opened, 'Active')";
-            
+
             $this->db->query($accountSql)
-                    ->bind(':member_id', $memberId)
-                    ->bind(':account_number', $accountNumber)
-                    ->bind(':date_opened', date('Y-m-d'))
-                    ->execute();
+                ->bind(':member_id', $memberId)
+                ->bind(':account_number', $accountNumber)
+                ->bind(':date_opened', date('Y-m-d'))
+                ->execute();
 
             $this->db->commit();
 
@@ -74,7 +77,8 @@ class Member {
                 'member_number' => $memberNumber
             ];
 
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             $this->db->rollback();
             error_log("Member Creation Error: " . $e->getMessage());
             return ['success' => false, 'message' => 'Failed to register member: ' . $e->getMessage()];
@@ -84,7 +88,8 @@ class Member {
     /**
      * Update member
      */
-    public function update($memberId, $data) {
+    public function update($memberId, $data)
+    {
         try {
             $sql = "UPDATE members SET 
                     first_name = :first_name,
@@ -103,25 +108,26 @@ class Member {
                     WHERE member_id = :member_id";
 
             $this->db->query($sql)
-                    ->bind(':member_id', $memberId)
-                    ->bind(':first_name', $data['first_name'])
-                    ->bind(':last_name', $data['last_name'])
-                    ->bind(':phone_number', $data['phone_number'])
-                    ->bind(':email', $data['email'] ?? null)
-                    ->bind(':date_of_birth', $data['date_of_birth'] ?? null)
-                    ->bind(':gender', $data['gender'] ?? null)
-                    ->bind(':address', $data['address'] ?? null)
-                    ->bind(':city', $data['city'] ?? null)
-                    ->bind(':postal_code', $data['postal_code'] ?? null)
-                    ->bind(':employment_status', $data['employment_status'])
-                    ->bind(':department', $data['department'] ?? null)
-                    ->bind(':payroll_number', $data['payroll_number'] ?? null)
-                    ->bind(':membership_status', $data['membership_status'])
-                    ->execute();
+                ->bind(':member_id', $memberId)
+                ->bind(':first_name', $data['first_name'])
+                ->bind(':last_name', $data['last_name'])
+                ->bind(':phone_number', $data['phone_number'])
+                ->bind(':email', $data['email'] ?? null)
+                ->bind(':date_of_birth', $data['date_of_birth'] ?? null)
+                ->bind(':gender', $data['gender'] ?? null)
+                ->bind(':address', $data['address'] ?? null)
+                ->bind(':city', $data['city'] ?? null)
+                ->bind(':postal_code', $data['postal_code'] ?? null)
+                ->bind(':employment_status', $data['employment_status'])
+                ->bind(':department', $data['department'] ?? null)
+                ->bind(':payroll_number', $data['payroll_number'] ?? null)
+                ->bind(':membership_status', $data['membership_status'])
+                ->execute();
 
             return ['success' => true, 'message' => 'Member updated successfully'];
 
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             error_log("Member Update Error: " . $e->getMessage());
             return ['success' => false, 'message' => 'Failed to update member'];
         }
@@ -130,31 +136,34 @@ class Member {
     /**
      * Get member by ID
      */
-    public function getById($memberId) {
+    public function getById($memberId)
+    {
         $sql = "SELECT m.*, u.username, u.email as user_email, u.is_active as user_active
                 FROM members m
                 INNER JOIN users u ON m.user_id = u.user_id
                 WHERE m.member_id = :member_id";
-        
+
         return $this->db->query($sql)->bind(':member_id', $memberId)->fetch();
     }
 
     /**
      * Get member by user ID
      */
-    public function getByUserId($userId) {
+    public function getByUserId($userId)
+    {
         $sql = "SELECT m.*, u.username, u.email as user_email
                 FROM members m
                 INNER JOIN users u ON m.user_id = u.user_id
                 WHERE m.user_id = :user_id";
-        
+
         return $this->db->query($sql)->bind(':user_id', $userId)->fetch();
     }
 
     /**
      * Get member by member number
      */
-    public function getByMemberNumber($memberNumber) {
+    public function getByMemberNumber($memberNumber)
+    {
         $sql = "SELECT * FROM members WHERE member_number = :member_number";
         return $this->db->query($sql)->bind(':member_number', $memberNumber)->fetch();
     }
@@ -162,7 +171,8 @@ class Member {
     /**
      * Get all members
      */
-    public function getAll($filters = [], $limit = null, $offset = 0) {
+    public function getAll($filters = [], $limit = null, $offset = 0)
+    {
         $sql = "SELECT m.*, u.username,
                        (SELECT SUM(balance) FROM accounts WHERE member_id = m.member_id) as total_balance
                 FROM members m
@@ -205,7 +215,8 @@ class Member {
     /**
      * Count members
      */
-    public function count($filters = []) {
+    public function count($filters = [])
+    {
         $sql = "SELECT COUNT(*) as total FROM members WHERE 1=1";
 
         if (!empty($filters['membership_status'])) {
@@ -234,7 +245,8 @@ class Member {
     /**
      * Get member summary
      */
-    public function getSummary($memberId) {
+    public function getSummary($memberId)
+    {
         $sql = "SELECT * FROM vw_member_account_summary WHERE member_id = :member_id";
         return $this->db->query($sql)->bind(':member_id', $memberId)->fetch();
     }
@@ -242,7 +254,8 @@ class Member {
     /**
      * Delete member
      */
-    public function delete($memberId) {
+    public function delete($memberId)
+    {
         try {
             // Check if member has active loans
             $sql = "SELECT COUNT(*) as count FROM loans WHERE member_id = :member_id AND loan_status = 'Active'";
@@ -258,7 +271,8 @@ class Member {
 
             return ['success' => true, 'message' => 'Member deleted successfully'];
 
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             error_log("Member Delete Error: " . $e->getMessage());
             return ['success' => false, 'message' => 'Failed to delete member'];
         }
@@ -267,14 +281,16 @@ class Member {
     /**
      * Suspend member
      */
-    public function suspend($memberId, $reason) {
+    public function suspend($memberId, $reason)
+    {
         try {
             $sql = "UPDATE members SET membership_status = 'Suspended' WHERE member_id = :member_id";
             $this->db->query($sql)->bind(':member_id', $memberId)->execute();
 
             return ['success' => true, 'message' => 'Member suspended successfully'];
 
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             error_log("Member Suspend Error: " . $e->getMessage());
             return ['success' => false, 'message' => 'Failed to suspend member'];
         }
@@ -283,14 +299,16 @@ class Member {
     /**
      * Activate member
      */
-    public function activate($memberId) {
+    public function activate($memberId)
+    {
         try {
             $sql = "UPDATE members SET membership_status = 'Active' WHERE member_id = :member_id";
             $this->db->query($sql)->bind(':member_id', $memberId)->execute();
 
             return ['success' => true, 'message' => 'Member activated successfully'];
 
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             error_log("Member Activate Error: " . $e->getMessage());
             return ['success' => false, 'message' => 'Failed to activate member'];
         }
@@ -299,33 +317,45 @@ class Member {
     /**
      * Generate unique member number
      */
-    private function generateMemberNumber() {
+    private function generateMemberNumber()
+    {
         $year = date('Y');
-        $sql = "SELECT COUNT(*) as count FROM members WHERE YEAR(created_at) = :year";
+        // PostgreSQL: EXTRACT(YEAR FROM created_at)
+        // MySQL: YEAR(created_at)
+        $driver = DB_DRIVER;
+        if ($driver === 'pgsql') {
+            $sql = "SELECT COUNT(*) as count FROM members WHERE EXTRACT(YEAR FROM created_at) = :year";
+        }
+        else {
+            $sql = "SELECT COUNT(*) as count FROM members WHERE YEAR(created_at) = :year";
+        }
+
         $result = $this->db->query($sql)->bind(':year', $year)->fetch();
-        $count = $result['count'] + 1;
+        $count = ($result['count'] ?? 0) + 1;
         return 'LCW' . $year . str_pad($count, 4, '0', STR_PAD_LEFT);
     }
 
     /**
      * Generate unique account number
      */
-    private function generateAccountNumber() {
+    private function generateAccountNumber()
+    {
         return 'ACC' . date('Y') . rand(100000, 999999);
     }
 
     /**
      * Check if ID number exists
      */
-    public function idNumberExists($idNumber, $excludeMemberId = null) {
+    public function idNumberExists($idNumber, $excludeMemberId = null)
+    {
         $sql = "SELECT member_id FROM members WHERE id_number = :id_number";
-        
+
         if ($excludeMemberId) {
             $sql .= " AND member_id != :member_id";
         }
 
         $query = $this->db->query($sql)->bind(':id_number', $idNumber);
-        
+
         if ($excludeMemberId) {
             $query->bind(':member_id', $excludeMemberId);
         }
@@ -336,14 +366,15 @@ class Member {
     /**
      * Get member statistics
      */
-    public function getStatistics() {
+    public function getStatistics()
+    {
         $sql = "SELECT 
                     COUNT(*) as total_members,
                     SUM(CASE WHEN membership_status = 'Active' THEN 1 ELSE 0 END) as active_members,
                     SUM(CASE WHEN membership_status = 'Suspended' THEN 1 ELSE 0 END) as suspended_members,
                     SUM(CASE WHEN membership_status = 'Inactive' THEN 1 ELSE 0 END) as inactive_members
                 FROM members";
-        
+
         return $this->db->query($sql)->fetch();
     }
 }
