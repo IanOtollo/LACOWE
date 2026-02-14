@@ -25,6 +25,7 @@ $requestedFile = ltrim($uri, '/');
 if (preg_match('/\.php$/', $requestedFile) && file_exists($requestedFile)) {
     require_once $requestedFile;
 }
+else {
     // If no file matches, fallback to index.php or show 404
     http_response_code(404);
     echo "404 - File Not Found: " . htmlspecialchars($uri);
