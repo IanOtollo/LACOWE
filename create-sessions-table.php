@@ -17,15 +17,17 @@ try {
         $sql = "CREATE TABLE IF NOT EXISTS sessions (
             id TEXT PRIMARY KEY,
             data TEXT NOT NULL,
-            expiry INTEGER NOT NULL
+            expires INTEGER NOT NULL,
+            created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
         )";
     }
     else {
         $sql = "CREATE TABLE IF NOT EXISTS sessions (
             id VARCHAR(255) PRIMARY KEY,
             data TEXT NOT NULL,
-            expiry INT(11) NOT NULL,
-            INDEX (expiry)
+            expires INT(11) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            INDEX (expires)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
     }
 

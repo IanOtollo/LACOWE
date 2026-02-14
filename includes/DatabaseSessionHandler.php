@@ -35,7 +35,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface
     public function read($id): string
     {
         try {
-            $sql = "SELECT data FROM {$this->table} WHERE id = :id AND expiry > :now";
+            $sql = "SELECT data FROM {$this->table} WHERE id = :id AND expires > :now";
             $row = $this->db->query($sql)
                 ->bind(':id', $id)
                 ->bind(':now', time())
@@ -52,7 +52,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface
     public function write($id, $data): bool
     {
         try {
-            $expiry = time() + (int)ini_get('session.gc_maxlifetime');
+            $expires = time() + (int)ini_get('session.gc_maxlifetime');
 
             // Use DELETE then INSERT for cross-driver compatibility (MySQL & Postgres)
             $this->db->beginTransaction();
@@ -60,11 +60,11 @@ class DatabaseSessionHandler implements SessionHandlerInterface
             $sql = "DELETE FROM {$this->table} WHERE id = :id";
             $this->db->query($sql)->bind(':id', $id)->execute();
 
-            $sql = "INSERT INTO {$this->table} (id, data, expiry) VALUES (:id, :data, :expiry)";
+            $sql = "INSERT INTO {$this->table} (id, data, expires) VALUES (:id, :data, :expires)";
             $this->db->query($sql)
                 ->bind(':id', $id)
                 ->bind(':data', $data)
-                ->bind(':expiry', $expiry)
+                ->bind(':expires', $expires)
                 ->execute();
 
             $this->db->commit();
@@ -94,7 +94,7 @@ class DatabaseSessionHandler implements SessionHandlerInterface
     public function gc($maxlifetime): int|false
     {
         try {
-            $sql = "DELETE FROM {$this->table} WHERE expiry < :now";
+            $sql = "DELETE FROM {$this->table} WHERE expires < :now";
             $this->db->query($sql)->bind(':now', time())->execute();
             return true;
         }
