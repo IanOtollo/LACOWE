@@ -30,8 +30,11 @@ class Session
                 'samesite' => 'Lax'
             ]);
 
-            // For Vercel/Serverless: cache limiter can sometimes interfere
-            session_cache_limiter('nocache');
+            // Use Database-backed sessions for Vercel/Serverless persistence
+            require_once __DIR__ . '/Database.php';
+            require_once __DIR__ . '/DatabaseSessionHandler.php';
+            $handler = new DatabaseSessionHandler();
+            session_set_save_handler($handler, true);
 
             session_start();
         }
