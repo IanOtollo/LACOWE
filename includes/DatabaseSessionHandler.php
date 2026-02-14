@@ -4,7 +4,7 @@
  * Stores session data in the database for persistence across serverless instances
  */
 
-class DatabaseSessionHandler implements SessionHandlerInterface
+class DatabaseSessionHandler implements SessionHandlerInterface, SessionUpdateTimestampHandlerInterface
 {
     private $db;
     private $table = 'sessions';
@@ -100,6 +100,44 @@ class DatabaseSessionHandler implements SessionHandlerInterface
         }
         catch (Exception $e) {
             error_log("Session GC Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Update session timestamp - prevents errors during lazy session writes
+     */
+    public function updateTimestamp($id, $data): bool
+    {
+        try {
+            $expires = time() + (int)ini_get('session.gc_maxlifetime');
+            $sql = "UPDATE {$this->table} SET expires = :expires WHERE id = :id";
+            $this->db->query($sql)
+                ->bind(':expires', $expires)
+                ->bind(':id', $id)
+                ->execute();
+            return true;
+        }
+        catch (Exception $e) {
+            error_log("Session Update Timestamp Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Check if session ID is valid
+     */
+    public function validateId($id): bool
+    {
+        try {
+            $sql = "SELECT 1 FROM {$this->table} WHERE id = :id AND expires > :now";
+            $row = $this->db->query($sql)
+                ->bind(':id', $id)
+                ->bind(':now', time())
+                ->fetch();
+            return $row !== false;
+        }
+        catch (Exception $e) {
             return false;
         }
     }

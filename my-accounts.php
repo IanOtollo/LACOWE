@@ -65,14 +65,7 @@ $activeAccountsCount = 0;
 
 foreach ($accounts as $account) {
     $totalBalance += $account['balance'];
-    if ($account['status'] == 'Active') { // Note: DB schema says 'account_status' but previous code used 'status'. 
-        // Account model 'create' uses 'account_status'. 
-        // 'getByMemberId' SELECT * returns table cols.
-        // Schema says 'account_status'.
-        // I must verify if the previous code was wrong or if I missed an alias.
-        // Account.php getByMemberId selects *.
-        // Let's check Account.php again or just use 'account_status'.
-        // SAFE BET: Use $account['account_status'] as per schema.
+    if ($account['account_status'] == 'Active') {
         $activeAccountsCount++;
     }
 
@@ -526,7 +519,7 @@ else: ?>
                             <i class="fas fa-info-circle"></i> Account Status
                         </div>
                         <div class="account-detail-value">
-                            <?php echo htmlspecialchars($account['status']); ?>
+                            <?php echo htmlspecialchars($account['account_status'] ?? 'Unknown'); ?>
                         </div>
                     </div>
                     
