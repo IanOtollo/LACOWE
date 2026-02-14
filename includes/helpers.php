@@ -124,6 +124,7 @@ function redirect($page)
 
     // In Vercel/proxied environments, relative headers can be flaky.
     // Try to build an absolute-compliant path if possible, or just use the local path.
+    session_write_close();
     header("Location: $page");
     exit();
 }
