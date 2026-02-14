@@ -38,7 +38,7 @@ function isValidPhone($phone)
  */
 function formatCurrency($amount)
 {
-    return CURRENCY_SYMBOL . ' ' . number_format($amount, CURRENCY_DECIMAL_PLACES);
+    return CURRENCY_SYMBOL . ' ' . number_format((float)($amount ?? 0), CURRENCY_DECIMAL_PLACES);
 }
 
 /**

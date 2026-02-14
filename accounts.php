@@ -55,7 +55,7 @@ include 'views/layouts/header.php';
                 <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;">
                     <i class="fas fa-wallet"></i>
                 </div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format($stats['total_accounts']); ?></h3>
+                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($stats['total_accounts'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Total Accounts</p>
             </div>
         </div>
@@ -67,7 +67,7 @@ include 'views/layouts/header.php';
                 <div style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;">
                     <i class="fas fa-check-circle"></i>
                 </div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format($stats['active_accounts']); ?></h3>
+                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($stats['active_accounts'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Active Accounts</p>
             </div>
         </div>
@@ -136,7 +136,7 @@ include 'views/layouts/header.php';
                                 <td style="font-weight: 600; color: var(--gray-900);">
                                     <?php echo formatCurrency($account['balance']); ?>
                                 </td>
-                                <td><?php echo number_format($account['interest_rate'], 2); ?>%</td>
+                                <td><?php echo number_format((float)($account['interest_rate'] ?? 0), 2); ?>%</td>
                                 <td><?php echo formatDate($account['date_opened']); ?></td>
                                 <td><?php echo getStatusBadge($account['account_status']); ?></td>
                             </tr>

@@ -115,7 +115,7 @@ include 'views/layouts/header.php';
         <div class="card">
             <div class="card-body" style="text-align: center;">
                 <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-users"></i></div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format($memberStats['total_members']); ?></h3>
+                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($memberStats['total_members'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Total Members</p>
             </div>
         </div>
@@ -124,7 +124,7 @@ include 'views/layouts/header.php';
         <div class="card">
             <div class="card-body" style="text-align: center;">
                 <div style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;"><i class="fas fa-check-circle"></i></div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format($memberStats['active_members']); ?></h3>
+                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($memberStats['active_members'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Active</p>
             </div>
         </div>
@@ -133,7 +133,7 @@ include 'views/layouts/header.php';
         <div class="card">
             <div class="card-body" style="text-align: center;">
                 <div style="font-size: 2rem; color: var(--warning); margin-bottom: 0.5rem;"><i class="fas fa-pause-circle"></i></div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format($memberStats['suspended_members']); ?></h3>
+                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($memberStats['suspended_members'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Suspended</p>
             </div>
         </div>
@@ -142,7 +142,7 @@ include 'views/layouts/header.php';
         <div class="card">
             <div class="card-body" style="text-align: center;">
                 <div style="font-size: 2rem; color: var(--danger); margin-bottom: 0.5rem;"><i class="fas fa-times-circle"></i></div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format($memberStats['inactive_members']); ?></h3>
+                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($memberStats['inactive_members'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Inactive</p>
             </div>
         </div>
@@ -190,7 +190,7 @@ include 'views/layouts/header.php';
         <div class="card">
             <div class="card-body" style="text-align: center;">
                 <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-file-invoice-dollar"></i></div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format($loanStats['total_loans']); ?></h3>
+                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($loanStats['total_loans'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Total Loans</p>
             </div>
         </div>
@@ -223,7 +223,7 @@ include 'views/layouts/header.php';
         <div class="card">
             <div class="card-body" style="text-align: center;">
                 <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-receipt"></i></div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format($transactionStats['total_transactions']); ?></h3>
+                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($transactionStats['total_transactions'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Total Transactions</p>
             </div>
         </div>
