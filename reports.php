@@ -22,8 +22,7 @@ try {
                 SUM(CASE WHEN membership_status = 'Inactive' THEN 1 ELSE 0 END) as inactive_members
             FROM members";
     $memberStats = $db->getConnection()->query($sql)->fetch();
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     $memberStats = ['total_members' => 0, 'active_members' => 0, 'suspended_members' => 0, 'inactive_members' => 0];
 }
 
@@ -36,8 +35,7 @@ try {
             FROM accounts
             WHERE account_status = 'Active'";
     $financialStats = $db->getConnection()->query($sql)->fetch();
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     $financialStats = ['total_balance' => 0, 'savings_balance' => 0, 'shares_balance' => 0];
 }
 
@@ -50,8 +48,7 @@ try {
                 COALESCE(SUM(principal_amount), 0) as total_disbursed
             FROM loans";
     $loanStats = $db->getConnection()->query($sql)->fetch();
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     $loanStats = ['total_loans' => 0, 'active_loans' => 0, 'outstanding_balance' => 0, 'total_disbursed' => 0];
 }
 
@@ -67,8 +64,7 @@ try {
     $stmt = $db->getConnection()->prepare($sql);
     $stmt->execute(['start_date' => $startDate, 'end_date' => $endDate]);
     $transactionStats = $stmt->fetch();
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     $transactionStats = ['total_transactions' => 0, 'total_deposits' => 0, 'total_withdrawals' => 0, 'total_repayments' => 0];
 }
 
@@ -85,13 +81,15 @@ include 'views/layouts/header.php';
                 <div class="col col-4">
                     <div class="form-group">
                         <label class="form-label">Start Date</label>
-                        <input type="date" name="start_date" class="form-control" value="<?php echo htmlspecialchars($startDate); ?>">
+                        <input type="date" name="start_date" class="form-control"
+                            value="<?php echo htmlspecialchars($startDate); ?>">
                     </div>
                 </div>
                 <div class="col col-4">
                     <div class="form-group">
                         <label class="form-label">End Date</label>
-                        <input type="date" name="end_date" class="form-control" value="<?php echo htmlspecialchars($endDate); ?>">
+                        <input type="date" name="end_date" class="form-control"
+                            value="<?php echo htmlspecialchars($endDate); ?>">
                     </div>
                 </div>
                 <div class="col col-4">
@@ -107,15 +105,45 @@ include 'views/layouts/header.php';
     </div>
 </div>
 
-<h3 style="margin-bottom: 1rem; color: var(--gray-800);">
-    <i class="fas fa-users"></i> Membership Report
-</h3>
+<div class="card" style="margin-bottom: 2rem; background-color: var(--gray-50);">
+    <div class="card-body"
+        style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem;">
+        <h4 style="margin: 0; color: var(--gray-700);"><i class="fas fa-file-export"></i> Quick Exports</h4>
+        <div style="display: flex; gap: 0.75rem;">
+            <a href="api/export-report.php?type=members" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-users"></i> Export Members
+            </a>
+            <a href="api/export-report.php?type=loans&start_date=<?php echo $startDate; ?>&end_date=<?php echo $endDate; ?>"
+                class="btn btn-sm btn-outline-success">
+                <i class="fas fa-hand-holding-usd"></i> Export Loans
+            </a>
+            <a href="api/export-report.php?type=transactions&start_date=<?php echo $startDate; ?>&end_date=<?php echo $endDate; ?>"
+                class="btn btn-sm btn-outline-info">
+                <i class="fas fa-exchange-alt"></i> Export Transactions
+            </a>
+            <a href="api/export-report.php?type=bank_accounts" class="btn btn-sm btn-outline-warning">
+                <i class="fas fa-university"></i> Export Bank Accounts
+            </a>
+        </div>
+    </div>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h3 style="margin: 0; color: var(--gray-800);">
+        <i class="fas fa-users"></i> Membership Report
+    </h3>
+    <a href="api/export-report.php?type=members" class="btn btn-sm btn-outline-primary" title="Download CSV">
+        <i class="fas fa-download"></i> CSV
+    </a>
+</div>
 <div class="row" style="margin-bottom: 2rem;">
     <div class="col col-3">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-users"></i></div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($memberStats['total_members'] ?? 0)); ?></h3>
+                <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-users"></i>
+                </div>
+                <h3 style="margin: 0; font-size: 1.75rem;">
+                    <?php echo number_format((float) ($memberStats['total_members'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Total Members</p>
             </div>
         </div>
@@ -123,8 +151,10 @@ include 'views/layouts/header.php';
     <div class="col col-3">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;"><i class="fas fa-check-circle"></i></div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($memberStats['active_members'] ?? 0)); ?></h3>
+                <div style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;"><i
+                        class="fas fa-check-circle"></i></div>
+                <h3 style="margin: 0; font-size: 1.75rem;">
+                    <?php echo number_format((float) ($memberStats['active_members'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Active</p>
             </div>
         </div>
@@ -132,8 +162,10 @@ include 'views/layouts/header.php';
     <div class="col col-3">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--warning); margin-bottom: 0.5rem;"><i class="fas fa-pause-circle"></i></div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($memberStats['suspended_members'] ?? 0)); ?></h3>
+                <div style="font-size: 2rem; color: var(--warning); margin-bottom: 0.5rem;"><i
+                        class="fas fa-pause-circle"></i></div>
+                <h3 style="margin: 0; font-size: 1.75rem;">
+                    <?php echo number_format((float) ($memberStats['suspended_members'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Suspended</p>
             </div>
         </div>
@@ -141,23 +173,31 @@ include 'views/layouts/header.php';
     <div class="col col-3">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--danger); margin-bottom: 0.5rem;"><i class="fas fa-times-circle"></i></div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($memberStats['inactive_members'] ?? 0)); ?></h3>
+                <div style="font-size: 2rem; color: var(--danger); margin-bottom: 0.5rem;"><i
+                        class="fas fa-times-circle"></i></div>
+                <h3 style="margin: 0; font-size: 1.75rem;">
+                    <?php echo number_format((float) ($memberStats['inactive_members'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Inactive</p>
             </div>
         </div>
     </div>
 </div>
 
-<h3 style="margin-bottom: 1rem; color: var(--gray-800);">
-    <i class="fas fa-chart-line"></i> Financial Summary
-</h3>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h3 style="margin: 0; color: var(--gray-800);">
+        <i class="fas fa-chart-line"></i> Financial Summary
+    </h3>
+</div>
 <div class="row" style="margin-bottom: 2rem;">
     <div class="col col-4">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-wallet"></i></div>
-                <h3 style="margin: 0; font-size: 1.5rem;"><?php echo formatCurrency($financialStats['total_balance']); ?></h3>
+                <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;"><i
+                        class="fas fa-wallet"></i></div>
+                <h3 style="margin: 0; font-size: 1.5rem;">
+                    <?php echo formatCurrency($financialStats['total_balance']); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Total Balance</p>
             </div>
         </div>
@@ -165,8 +205,10 @@ include 'views/layouts/header.php';
     <div class="col col-4">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;"><i class="fas fa-piggy-bank"></i></div>
-                <h3 style="margin: 0; font-size: 1.5rem;"><?php echo formatCurrency($financialStats['savings_balance']); ?></h3>
+                <div style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;"><i
+                        class="fas fa-piggy-bank"></i></div>
+                <h3 style="margin: 0; font-size: 1.5rem;">
+                    <?php echo formatCurrency($financialStats['savings_balance']); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Savings</p>
             </div>
         </div>
@@ -174,23 +216,35 @@ include 'views/layouts/header.php';
     <div class="col col-4">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--info); margin-bottom: 0.5rem;"><i class="fas fa-chart-pie"></i></div>
-                <h3 style="margin: 0; font-size: 1.5rem;"><?php echo formatCurrency($financialStats['shares_balance']); ?></h3>
+                <div style="font-size: 2rem; color: var(--info); margin-bottom: 0.5rem;"><i
+                        class="fas fa-chart-pie"></i></div>
+                <h3 style="margin: 0; font-size: 1.5rem;">
+                    <?php echo formatCurrency($financialStats['shares_balance']); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Shares</p>
             </div>
         </div>
     </div>
 </div>
 
-<h3 style="margin-bottom: 1rem; color: var(--gray-800);">
-    <i class="fas fa-hand-holding-usd"></i> Loan Summary
-</h3>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h3 style="margin: 0; color: var(--gray-800);">
+        <i class="fas fa-hand-holding-usd"></i> Loan Summary
+    </h3>
+    <a href="api/export-report.php?type=loans&start_date=<?php echo $startDate; ?>&end_date=<?php echo $endDate; ?>"
+        class="btn btn-sm btn-outline-success" title="Download CSV">
+        <i class="fas fa-download"></i> CSV
+    </a>
+</div>
 <div class="row" style="margin-bottom: 2rem;">
     <div class="col col-4">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-file-invoice-dollar"></i></div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($loanStats['total_loans'] ?? 0)); ?></h3>
+                <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;"><i
+                        class="fas fa-file-invoice-dollar"></i></div>
+                <h3 style="margin: 0; font-size: 1.75rem;">
+                    <?php echo number_format((float) ($loanStats['total_loans'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Total Loans</p>
             </div>
         </div>
@@ -198,8 +252,10 @@ include 'views/layouts/header.php';
     <div class="col col-4">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--warning); margin-bottom: 0.5rem;"><i class="fas fa-exclamation-triangle"></i></div>
-                <h3 style="margin: 0; font-size: 1.5rem;"><?php echo formatCurrency($loanStats['outstanding_balance']); ?></h3>
+                <div style="font-size: 2rem; color: var(--warning); margin-bottom: 0.5rem;"><i
+                        class="fas fa-exclamation-triangle"></i></div>
+                <h3 style="margin: 0; font-size: 1.5rem;">
+                    <?php echo formatCurrency($loanStats['outstanding_balance']); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Outstanding</p>
             </div>
         </div>
@@ -207,23 +263,36 @@ include 'views/layouts/header.php';
     <div class="col col-4">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;"><i class="fas fa-money-bill-wave"></i></div>
-                <h3 style="margin: 0; font-size: 1.5rem;"><?php echo formatCurrency($loanStats['total_disbursed']); ?></h3>
+                <div style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;"><i
+                        class="fas fa-money-bill-wave"></i></div>
+                <h3 style="margin: 0; font-size: 1.5rem;"><?php echo formatCurrency($loanStats['total_disbursed']); ?>
+                </h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Total Disbursed</p>
             </div>
         </div>
     </div>
 </div>
 
-<h3 style="margin-bottom: 1rem; color: var(--gray-800);">
-    <i class="fas fa-exchange-alt"></i> Transaction Summary (<?php echo formatDate($startDate); ?> - <?php echo formatDate($endDate); ?>)
-</h3>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h3 style="margin: 0; color: var(--gray-800);">
+        <i class="fas fa-exchange-alt"></i> Transaction Summary (<?php echo formatDate($startDate); ?> -
+        <?php echo formatDate($endDate); ?>)
+    </h3>
+    <a href="api/export-report.php?type=transactions&start_date=<?php echo $startDate; ?>&end_date=<?php echo $endDate; ?>"
+        class="btn btn-sm btn-outline-info" title="Download CSV">
+        <i class="fas fa-download"></i> CSV
+    </a>
+</div>
 <div class="row" style="margin-bottom: 2rem;">
     <div class="col col-3">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-receipt"></i></div>
-                <h3 style="margin: 0; font-size: 1.75rem;"><?php echo number_format((float)($transactionStats['total_transactions'] ?? 0)); ?></h3>
+                <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;"><i
+                        class="fas fa-receipt"></i></div>
+                <h3 style="margin: 0; font-size: 1.75rem;">
+                    <?php echo number_format((float) ($transactionStats['total_transactions'] ?? 0)); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Total Transactions</p>
             </div>
         </div>
@@ -231,8 +300,10 @@ include 'views/layouts/header.php';
     <div class="col col-3">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;"><i class="fas fa-arrow-down"></i></div>
-                <h3 style="margin: 0; font-size: 1.5rem;"><?php echo formatCurrency($transactionStats['total_deposits']); ?></h3>
+                <div style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;"><i
+                        class="fas fa-arrow-down"></i></div>
+                <h3 style="margin: 0; font-size: 1.5rem;">
+                    <?php echo formatCurrency($transactionStats['total_deposits']); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Deposits</p>
             </div>
         </div>
@@ -240,8 +311,10 @@ include 'views/layouts/header.php';
     <div class="col col-3">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--danger); margin-bottom: 0.5rem;"><i class="fas fa-arrow-up"></i></div>
-                <h3 style="margin: 0; font-size: 1.5rem;"><?php echo formatCurrency($transactionStats['total_withdrawals']); ?></h3>
+                <div style="font-size: 2rem; color: var(--danger); margin-bottom: 0.5rem;"><i
+                        class="fas fa-arrow-up"></i></div>
+                <h3 style="margin: 0; font-size: 1.5rem;">
+                    <?php echo formatCurrency($transactionStats['total_withdrawals']); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Withdrawals</p>
             </div>
         </div>
@@ -249,8 +322,10 @@ include 'views/layouts/header.php';
     <div class="col col-3">
         <div class="card">
             <div class="card-body" style="text-align: center;">
-                <div style="font-size: 2rem; color: var(--info); margin-bottom: 0.5rem;"><i class="fas fa-undo"></i></div>
-                <h3 style="margin: 0; font-size: 1.5rem;"><?php echo formatCurrency($transactionStats['total_repayments']); ?></h3>
+                <div style="font-size: 2rem; color: var(--info); margin-bottom: 0.5rem;"><i class="fas fa-undo"></i>
+                </div>
+                <h3 style="margin: 0; font-size: 1.5rem;">
+                    <?php echo formatCurrency($transactionStats['total_repayments']); ?></h3>
                 <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Loan Repayments</p>
             </div>
         </div>

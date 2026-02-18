@@ -296,6 +296,24 @@ CREATE TABLE system_settings (
 ) ENGINE=InnoDB;
 
 -- ============================================
+-- 14. BANK ACCOUNTS TABLE
+-- ============================================
+CREATE TABLE bank_accounts (
+    bank_account_id INT AUTO_INCREMENT PRIMARY KEY,
+    member_id INT NOT NULL,
+    bank_name VARCHAR(100) NOT NULL,
+    account_name VARCHAR(100) NOT NULL,
+    account_number VARCHAR(50) NOT NULL,
+    branch_name VARCHAR(100),
+    swift_code VARCHAR(20),
+    is_verified TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE,
+    INDEX idx_member_id (member_id)
+) ENGINE=InnoDB;
+
+-- ============================================
 -- INSERT DEFAULT DATA
 -- ============================================
 

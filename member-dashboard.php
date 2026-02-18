@@ -14,11 +14,13 @@ require_once 'models/Member.php';
 require_once 'models/Account.php';
 require_once 'models/Loan.php';
 require_once 'models/Transaction.php';
+require_once 'models/BankAccount.php';
 
 $memberModel = new Member();
 $accountModel = new Account();
 $loanModel = new Loan();
 $transactionModel = new Transaction();
+$bankAccountModel = new BankAccount();
 
 // Get member details
 $userId = Session::getUserId();
@@ -50,34 +52,37 @@ $totalBorrowed = $loanStats['total_borrowed'];
 // Get my loans
 try {
     $myLoans = $loanModel->getLoansByMember($memberId, 5);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     $myLoans = [];
 }
 
 // Get pending loan applications
 try {
     $pendingLoans = $loanModel->getAllApplications(['member_id' => $memberId, 'status' => 'Pending'], 5);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     $pendingLoans = [];
 }
 
 // Get my accounts
 try {
     $myAccounts = $accountModel->getByMemberId($memberId);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     $myAccounts = [];
 }
 
 // Get recent transactions
 try {
     $recentTransactions = $transactionModel->getByMemberId($memberId, 10);
-// Map balance_after to balance for view compatibility if needed, but view uses balance_after
-}
-catch (Exception $e) {
+    // Map balance_after to balance for view compatibility if needed, but view uses balance_after
+} catch (Exception $e) {
     $recentTransactions = [];
+}
+
+// Get linked bank accounts
+try {
+    $myBankAccounts = $bankAccountModel->getByMemberId($memberId);
+} catch (Exception $e) {
+    $myBankAccounts = [];
 }
 
 include 'views/layouts/header.php';
@@ -86,8 +91,11 @@ include 'views/layouts/header.php';
 <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--primary);">
     <div class="card-body" style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h2 style="margin: 0; font-size: 1.5rem; color: var(--gray-900);">Welcome back, <?php echo htmlspecialchars($member['first_name']); ?>!</h2>
-            <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Member ID: <span style="font-family: var(--font-mono); font-weight: 600; color: var(--primary);"><?php echo htmlspecialchars($memberNumber); ?></span></p>
+            <h2 style="margin: 0; font-size: 1.5rem; color: var(--gray-900);">Welcome back,
+                <?php echo htmlspecialchars($member['first_name']); ?>!</h2>
+            <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Member ID: <span
+                    style="font-family: var(--font-mono); font-weight: 600; color: var(--primary);"><?php echo htmlspecialchars($memberNumber); ?></span>
+            </p>
         </div>
         <div style="text-align: right;">
             <p style="margin: 0; font-size: 0.875rem; color: var(--gray-500);"><?php echo date('l, F j, Y'); ?></p>
@@ -131,7 +139,7 @@ include 'views/layouts/header.php';
             <p>Total Balance</p>
         </div>
     </div>
-    
+
     <div class="col col-3">
         <div class="stat-card stat-card-success">
             <div class="stat-card-icon">
@@ -141,7 +149,7 @@ include 'views/layouts/header.php';
             <p>Savings Balance</p>
         </div>
     </div>
-    
+
     <div class="col col-3">
         <div class="stat-card stat-card-warning">
             <div class="stat-card-icon">
@@ -151,7 +159,7 @@ include 'views/layouts/header.php';
             <p>Active Loans</p>
         </div>
     </div>
-    
+
     <div class="col col-3">
         <div class="stat-card stat-card-danger">
             <div class="stat-card-icon">
@@ -174,7 +182,7 @@ include 'views/layouts/header.php';
             <p>Shares Balance</p>
         </div>
     </div>
-    
+
     <div class="col col-3">
         <div class="stat-card stat-card-success">
             <div class="stat-card-icon">
@@ -184,7 +192,7 @@ include 'views/layouts/header.php';
             <p>Active Accounts</p>
         </div>
     </div>
-    
+
     <div class="col col-3">
         <div class="stat-card stat-card-warning">
             <div class="stat-card-icon">
@@ -194,7 +202,7 @@ include 'views/layouts/header.php';
             <p>Pending Applications</p>
         </div>
     </div>
-    
+
     <div class="col col-3">
         <div class="stat-card stat-card-info">
             <div class="stat-card-icon">
@@ -232,22 +240,29 @@ include 'views/layouts/header.php';
                 <i class="fas fa-money-check-alt"></i>
                 <span>My Loans</span>
             </a>
+            <a href="link-bank-account.php" class="quick-action-btn"
+                style="background-color: var(--info); color: white;">
+                <i class="fas fa-university"></i>
+                <span>Link Bank Account</span>
+            </a>
         </div>
     </div>
 </div>
 
 <!-- Pending Loan Applications Alert -->
 <?php if ($pendingApplications > 0): ?>
-<div class="alert alert-warning" style="margin-bottom: 2rem;">
-    <div style="display: flex; align-items: center; gap: 1rem;">
-        <i class="fas fa-exclamation-triangle" style="font-size: 1.5rem;"></i>
-        <div>
-            <strong>Pending Loan Applications</strong>
-            <p style="margin: 0.25rem 0 0;">You have <?php echo $pendingApplications; ?> loan application(s) pending approval. <a href="my-loans.php" style="color: var(--warning); text-decoration: underline;">View details</a></p>
+    <div class="alert alert-warning" style="margin-bottom: 2rem;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 1.5rem;"></i>
+            <div>
+                <strong>Pending Loan Applications</strong>
+                <p style="margin: 0.25rem 0 0;">You have <?php echo $pendingApplications; ?> loan application(s) pending
+                    approval. <a href="my-loans.php" style="color: var(--warning); text-decoration: underline;">View
+                        details</a></p>
+            </div>
         </div>
     </div>
-</div>
-<?php
+    <?php
 endif; ?>
 
 <!-- Main Content -->
@@ -268,8 +283,8 @@ endif; ?>
                         <p><strong>No accounts found</strong></p>
                         <p>Your accounts will appear here</p>
                     </div>
-                <?php
-else: ?>
+                    <?php
+                else: ?>
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
@@ -287,14 +302,16 @@ else: ?>
                                         <td><?php echo htmlspecialchars($account['account_type']); ?></td>
                                         <td><strong>KES <?php echo number_format($account['balance'], 2); ?></strong></td>
                                         <td>
-                                            <span class="badge badge-<?php echo $account['status'] == 'Active' ? 'success' : 'danger'; ?>">
-                                                <i class="fas fa-<?php echo $account['status'] == 'Active' ? 'check' : 'times'; ?>"></i>
+                                            <span
+                                                class="badge badge-<?php echo $account['status'] == 'Active' ? 'success' : 'danger'; ?>">
+                                                <i
+                                                    class="fas fa-<?php echo $account['status'] == 'Active' ? 'check' : 'times'; ?>"></i>
                                                 <?php echo htmlspecialchars($account['status']); ?>
                                             </span>
                                         </td>
                                     </tr>
-                                <?php
-    endforeach; ?>
+                                    <?php
+                                endforeach; ?>
                             </tbody>
                         </table>
                     </div>
@@ -303,8 +320,8 @@ else: ?>
                             <i class="fas fa-arrow-right"></i> View All Accounts
                         </a>
                     </div>
-                <?php
-endif; ?>
+                    <?php
+                endif; ?>
             </div>
         </div>
     </div>
@@ -325,8 +342,8 @@ endif; ?>
                         <p><strong>No transactions yet</strong></p>
                         <p>Your transaction history will appear here</p>
                     </div>
-                <?php
-else: ?>
+                    <?php
+                else: ?>
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
@@ -342,15 +359,15 @@ else: ?>
                                     <tr>
                                         <td><?php echo date('M d, Y', strtotime($trans['transaction_date'])); ?></td>
                                         <td>
-                                            <i class="fas fa-<?php echo $trans['transaction_type'] == 'Deposit' ? 'arrow-down' : 'arrow-up'; ?>" 
-                                               style="color: <?php echo $trans['transaction_type'] == 'Deposit' ? 'var(--success)' : 'var(--danger)'; ?>"></i>
+                                            <i class="fas fa-<?php echo $trans['transaction_type'] == 'Deposit' ? 'arrow-down' : 'arrow-up'; ?>"
+                                                style="color: <?php echo $trans['transaction_type'] == 'Deposit' ? 'var(--success)' : 'var(--danger)'; ?>"></i>
                                             <?php echo htmlspecialchars($trans['transaction_type']); ?>
                                         </td>
                                         <td><strong>KES <?php echo number_format($trans['amount'], 2); ?></strong></td>
                                         <td>KES <?php echo number_format($trans['balance_after'], 2); ?></td>
                                     </tr>
-                                <?php
-    endforeach; ?>
+                                    <?php
+                                endforeach; ?>
                             </tbody>
                         </table>
                     </div>
@@ -359,8 +376,8 @@ else: ?>
                             <i class="fas fa-arrow-right"></i> View All Transactions
                         </a>
                     </div>
-                <?php
-endif; ?>
+                    <?php
+                endif; ?>
             </div>
         </div>
     </div>
@@ -386,8 +403,8 @@ endif; ?>
                             <i class="fas fa-plus"></i> Apply for Loan
                         </a>
                     </div>
-                <?php
-else: ?>
+                    <?php
+                else: ?>
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
@@ -410,19 +427,19 @@ else: ?>
                                         <td><?php echo date('M d, Y', strtotime($loan['maturity_date'])); ?></td>
                                         <td>
                                             <span class="badge badge-<?php
-        echo $loan['status'] == 'Active' ? 'warning' :
-            ($loan['status'] == 'Fully Paid' ? 'success' : 'danger');
-?>">
+                                            echo $loan['status'] == 'Active' ? 'warning' :
+                                                ($loan['status'] == 'Fully Paid' ? 'success' : 'danger');
+                                            ?>">
                                                 <i class="fas fa-<?php
-        echo $loan['status'] == 'Active' ? 'clock' :
-            ($loan['status'] == 'Fully Paid' ? 'check' : 'times');
-?>"></i>
+                                                echo $loan['status'] == 'Active' ? 'clock' :
+                                                    ($loan['status'] == 'Fully Paid' ? 'check' : 'times');
+                                                ?>"></i>
                                                 <?php echo htmlspecialchars($loan['status']); ?>
                                             </span>
                                         </td>
                                     </tr>
-                                <?php
-    endforeach; ?>
+                                    <?php
+                                endforeach; ?>
                             </tbody>
                         </table>
                     </div>
@@ -431,8 +448,8 @@ else: ?>
                             <i class="fas fa-arrow-right"></i> View All Loans
                         </a>
                     </div>
-                <?php
-endif; ?>
+                    <?php
+                endif; ?>
             </div>
         </div>
     </div>
