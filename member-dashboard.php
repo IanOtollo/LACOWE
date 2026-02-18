@@ -88,43 +88,18 @@ try {
 include 'views/layouts/header.php';
 ?>
 
-<div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--primary);">
-    <div class="card-body" style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <h2 style="margin: 0; font-size: 1.5rem; color: var(--gray-900);">Welcome back,
-                <?php echo htmlspecialchars($member['first_name']); ?>!</h2>
-            <p style="margin: 0.5rem 0 0; color: var(--gray-600);">Member ID: <span
-                    style="font-family: var(--font-mono); font-weight: 600; color: var(--primary);"><?php echo htmlspecialchars($memberNumber); ?></span>
-            </p>
-        </div>
-        <div style="text-align: right;">
-            <p style="margin: 0; font-size: 0.875rem; color: var(--gray-500);"><?php echo date('l, F j, Y'); ?></p>
-        </div>
+<!-- Premium Welcome Banner -->
+<div class="welcome-banner" style="margin-bottom: 2rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 2.5rem; border-radius: 16px; box-shadow: var(--shadow-lg); position: relative; overflow: hidden;">
+    <div style="position: absolute; right: -20px; top: -20px; font-size: 10rem; opacity: 0.1; transform: rotate(-15deg);">
+        <i class="fas fa-university"></i>
     </div>
-</div>
-
-
-</style>
-
-<!-- Welcome Banner -->
-<div class="welcome-banner">
-    <div style="display: flex; align-items: center; justify-content: space-between;">
-        <div>
-            <h2 style="margin: 0 0 0.25rem 0; display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fas fa-hand-wave" style="font-size: 1.25rem;"></i>
-                Welcome back, <?php echo htmlspecialchars($memberName); ?>!
-            </h2>
-            <p style="margin: 0; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-                <span style="display: flex; align-items: center; gap: 0.375rem;">
-                    <i class="fas fa-id-card"></i>
-                    <strong><?php echo htmlspecialchars($memberNumber); ?></strong>
-                </span>
-                <span style="display: flex; align-items: center; gap: 0.375rem;">
-                    <i class="fas fa-calendar"></i>
-                    Member since <?php echo date('M Y', strtotime($member['created_at'])); ?>
-                </span>
-            </p>
-        </div>
+    <div style="position: relative; z-index: 1;">
+        <h2 style="margin: 0 0 0.5rem 0; color: white; font-size: 2rem;">Welcome back, <?php echo htmlspecialchars($member['first_name']); ?>!</h2>
+        <p style="margin: 0; opacity: 0.9; display: flex; align-items: center; gap: 1.5rem; font-weight: 500;">
+            <span><i class="fas fa-id-card"></i> ID: <?php echo htmlspecialchars($memberNumber); ?></span>
+            <span><i class="fas fa-calendar-alt"></i> Joined <?php echo date('M Y', strtotime($member['created_at'])); ?></span>
+            <span class="badge" style="background: rgba(255,255,255,0.2); color: white; border: none;"><?php echo htmlspecialchars($member['membership_status']); ?></span>
+        </p>
     </div>
 </div>
 
@@ -251,18 +226,18 @@ include 'views/layouts/header.php';
 
 <!-- Pending Loan Applications Alert -->
 <?php if ($pendingApplications > 0): ?>
-    <div class="alert alert-warning" style="margin-bottom: 2rem;">
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <i class="fas fa-exclamation-triangle" style="font-size: 1.5rem;"></i>
-            <div>
-                <strong>Pending Loan Applications</strong>
-                <p style="margin: 0.25rem 0 0;">You have <?php echo $pendingApplications; ?> loan application(s) pending
-                    approval. <a href="my-loans.php" style="color: var(--warning); text-decoration: underline;">View
-                        details</a></p>
+        <div class="alert alert-warning" style="margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 1.5rem;"></i>
+                <div>
+                    <strong>Pending Loan Applications</strong>
+                    <p style="margin: 0.25rem 0 0;">You have <?php echo $pendingApplications; ?> loan application(s) pending
+                        approval. <a href="my-loans.php" style="color: var(--warning); text-decoration: underline;">View
+                            details</a></p>
+                </div>
             </div>
         </div>
-    </div>
-    <?php
+        <?php
 endif; ?>
 
 <!-- Main Content -->
@@ -278,49 +253,49 @@ endif; ?>
             </div>
             <div class="card-body">
                 <?php if (empty($myAccounts)): ?>
-                    <div class="empty-state">
-                        <i class="fas fa-folder-open"></i>
-                        <p><strong>No accounts found</strong></p>
-                        <p>Your accounts will appear here</p>
-                    </div>
-                    <?php
+                        <div class="empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <p><strong>No accounts found</strong></p>
+                            <p>Your accounts will appear here</p>
+                        </div>
+                        <?php
                 else: ?>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th><i class="fas fa-hashtag table-icon"></i> Account #</th>
-                                    <th><i class="fas fa-tag table-icon"></i> Type</th>
-                                    <th><i class="fas fa-money-bill-wave table-icon"></i> Balance</th>
-                                    <th><i class="fas fa-check-circle table-icon"></i> Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($myAccounts as $account): ?>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($account['account_number']); ?></td>
-                                        <td><?php echo htmlspecialchars($account['account_type']); ?></td>
-                                        <td><strong>KES <?php echo number_format($account['balance'], 2); ?></strong></td>
-                                        <td>
-                                            <span
-                                                class="badge badge-<?php echo $account['status'] == 'Active' ? 'success' : 'danger'; ?>">
-                                                <i
-                                                    class="fas fa-<?php echo $account['status'] == 'Active' ? 'check' : 'times'; ?>"></i>
-                                                <?php echo htmlspecialchars($account['status']); ?>
-                                            </span>
-                                        </td>
+                                        <th><i class="fas fa-hashtag table-icon"></i> Account #</th>
+                                        <th><i class="fas fa-tag table-icon"></i> Type</th>
+                                        <th><i class="fas fa-money-bill-wave table-icon"></i> Balance</th>
+                                        <th><i class="fas fa-check-circle table-icon"></i> Status</th>
                                     </tr>
-                                    <?php
-                                endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div style="text-align: center; margin-top: 1rem;">
-                        <a href="my-accounts.php" class="btn btn-sm btn-primary">
-                            <i class="fas fa-arrow-right"></i> View All Accounts
-                        </a>
-                    </div>
-                    <?php
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($myAccounts as $account): ?>
+                                            <tr>
+                                                <td><?php echo htmlspecialchars($account['account_number']); ?></td>
+                                                <td><?php echo htmlspecialchars($account['account_type']); ?></td>
+                                                <td><strong>KES <?php echo number_format($account['balance'], 2); ?></strong></td>
+                                                <td>
+                                                    <span
+                                                        class="badge badge-<?php echo $account['status'] == 'Active' ? 'success' : 'danger'; ?>">
+                                                        <i
+                                                            class="fas fa-<?php echo $account['status'] == 'Active' ? 'check' : 'times'; ?>"></i>
+                                                        <?php echo htmlspecialchars($account['status']); ?>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                    endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="text-align: center; margin-top: 1rem;">
+                            <a href="my-accounts.php" class="btn btn-sm btn-primary">
+                                <i class="fas fa-arrow-right"></i> View All Accounts
+                            </a>
+                        </div>
+                        <?php
                 endif; ?>
             </div>
         </div>
@@ -337,46 +312,46 @@ endif; ?>
             </div>
             <div class="card-body">
                 <?php if (empty($recentTransactions)): ?>
-                    <div class="empty-state">
-                        <i class="fas fa-receipt"></i>
-                        <p><strong>No transactions yet</strong></p>
-                        <p>Your transaction history will appear here</p>
-                    </div>
-                    <?php
+                        <div class="empty-state">
+                            <i class="fas fa-receipt"></i>
+                            <p><strong>No transactions yet</strong></p>
+                            <p>Your transaction history will appear here</p>
+                        </div>
+                        <?php
                 else: ?>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th><i class="fas fa-calendar table-icon"></i> Date</th>
-                                    <th><i class="fas fa-exchange-alt table-icon"></i> Type</th>
-                                    <th><i class="fas fa-money-bill table-icon"></i> Amount</th>
-                                    <th><i class="fas fa-balance-scale table-icon"></i> Balance</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach (array_slice($recentTransactions, 0, 5) as $trans): ?>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
                                     <tr>
-                                        <td><?php echo date('M d, Y', strtotime($trans['transaction_date'])); ?></td>
-                                        <td>
-                                            <i class="fas fa-<?php echo $trans['transaction_type'] == 'Deposit' ? 'arrow-down' : 'arrow-up'; ?>"
-                                                style="color: <?php echo $trans['transaction_type'] == 'Deposit' ? 'var(--success)' : 'var(--danger)'; ?>"></i>
-                                            <?php echo htmlspecialchars($trans['transaction_type']); ?>
-                                        </td>
-                                        <td><strong>KES <?php echo number_format($trans['amount'], 2); ?></strong></td>
-                                        <td>KES <?php echo number_format($trans['balance_after'], 2); ?></td>
+                                        <th><i class="fas fa-calendar table-icon"></i> Date</th>
+                                        <th><i class="fas fa-exchange-alt table-icon"></i> Type</th>
+                                        <th><i class="fas fa-money-bill table-icon"></i> Amount</th>
+                                        <th><i class="fas fa-balance-scale table-icon"></i> Balance</th>
                                     </tr>
-                                    <?php
-                                endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div style="text-align: center; margin-top: 1rem;">
-                        <a href="my-transactions.php" class="btn btn-sm btn-primary">
-                            <i class="fas fa-arrow-right"></i> View All Transactions
-                        </a>
-                    </div>
-                    <?php
+                                </thead>
+                                <tbody>
+                                    <?php foreach (array_slice($recentTransactions, 0, 5) as $trans): ?>
+                                            <tr>
+                                                <td><?php echo date('M d, Y', strtotime($trans['transaction_date'])); ?></td>
+                                                <td>
+                                                    <i class="fas fa-<?php echo $trans['transaction_type'] == 'Deposit' ? 'arrow-down' : 'arrow-up'; ?>"
+                                                        style="color: <?php echo $trans['transaction_type'] == 'Deposit' ? 'var(--success)' : 'var(--danger)'; ?>"></i>
+                                                    <?php echo htmlspecialchars($trans['transaction_type']); ?>
+                                                </td>
+                                                <td><strong>KES <?php echo number_format($trans['amount'], 2); ?></strong></td>
+                                                <td>KES <?php echo number_format($trans['balance_after'], 2); ?></td>
+                                            </tr>
+                                            <?php
+                                    endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="text-align: center; margin-top: 1rem;">
+                            <a href="my-transactions.php" class="btn btn-sm btn-primary">
+                                <i class="fas fa-arrow-right"></i> View All Transactions
+                            </a>
+                        </div>
+                        <?php
                 endif; ?>
             </div>
         </div>
@@ -395,61 +370,137 @@ endif; ?>
             </div>
             <div class="card-body">
                 <?php if (empty($myLoans)): ?>
-                    <div class="empty-state">
-                        <i class="fas fa-hand-holding-usd"></i>
-                        <p><strong>No loans yet</strong></p>
-                        <p>Apply for a loan to get started</p>
-                        <a href="loan-application.php" class="btn btn-primary" style="margin-top: 1rem;">
-                            <i class="fas fa-plus"></i> Apply for Loan
-                        </a>
-                    </div>
-                    <?php
-                else: ?>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th><i class="fas fa-hashtag table-icon"></i> Loan #</th>
-                                    <th><i class="fas fa-tag table-icon"></i> Type</th>
-                                    <th><i class="fas fa-money-bill-wave table-icon"></i> Amount</th>
-                                    <th><i class="fas fa-chart-line table-icon"></i> Outstanding</th>
-                                    <th><i class="fas fa-calendar table-icon"></i> Due Date</th>
-                                    <th><i class="fas fa-info-circle table-icon"></i> Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($myLoans as $loan): ?>
+                        <div class="empty-state">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <p><strong>No loans yet</strong></p>
+                            <p>Apply for a loan to get started</p>
+                            <a href="loan-application.php" class="btn btn-primary" style="margin-top: 1rem;">
+                                <i class="fas fa-plus"></i> Apply for Loan
+                            </a>
+                        </div>
+                <?php else: ?>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($loan['loan_number']); ?></td>
-                                        <td><?php echo htmlspecialchars($loan['loan_type']); ?></td>
-                                        <td><strong>KES <?php echo number_format($loan['loan_amount'], 2); ?></strong></td>
-                                        <td>KES <?php echo number_format($loan['outstanding_balance'], 2); ?></td>
-                                        <td><?php echo date('M d, Y', strtotime($loan['maturity_date'])); ?></td>
-                                        <td>
-                                            <span class="badge badge-<?php
-                                            echo $loan['status'] == 'Active' ? 'warning' :
-                                                ($loan['status'] == 'Fully Paid' ? 'success' : 'danger');
-                                            ?>">
-                                                <i class="fas fa-<?php
-                                                echo $loan['status'] == 'Active' ? 'clock' :
-                                                    ($loan['status'] == 'Fully Paid' ? 'check' : 'times');
-                                                ?>"></i>
-                                                <?php echo htmlspecialchars($loan['status']); ?>
-                                            </span>
-                                        </td>
+                                        <th>Loan #</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Outstanding</th>
+                                        <th>Due Date</th>
+                                        <th>Status</th>
                                     </tr>
-                                    <?php
-                                endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div style="text-align: center; margin-top: 1rem;">
-                        <a href="my-loans.php" class="btn btn-sm btn-primary">
-                            <i class="fas fa-arrow-right"></i> View All Loans
-                        </a>
-                    </div>
-                    <?php
-                endif; ?>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($myLoans as $loan): ?>
+                                            <tr>
+                                                <td><?php echo htmlspecialchars($loan['loan_number']); ?></td>
+                                                <td><?php echo htmlspecialchars($loan['loan_type']); ?></td>
+                                                <td><strong>KES <?php echo number_format($loan['loan_amount'], 2); ?></strong></td>
+                                                <td>KES <?php echo number_format($loan['outstanding_balance'], 2); ?></td>
+                                                <td><?php echo date('M d, Y', strtotime($loan['maturity_date'])); ?></td>
+                                                <td>
+                                                    <span class="badge badge-<?php
+                                                    echo $loan['status'] == 'Active' ? 'warning' :
+                                                        ($loan['status'] == 'Fully Paid' ? 'success' : 'danger');
+                                                    ?>">
+                                                        <?php echo htmlspecialchars($loan['status']); ?>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- My Linked Bank Accounts Section -->
+<div class="row" style="margin-top: 2rem;">
+    <div class="col col-12">
+        <div class="card">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="section-title" style="margin: 0; padding: 0; border: none;">
+                    <i class="fas fa-university"></i>
+                    <h3>My Linked Bank Accounts</h3>
+                </div>
+                <a href="link-bank-account.php" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> Link New Account
+                </a>
+            </div>
+            <div class="card-body">
+                <?php if (empty($myBankAccounts)): ?>
+                        <div class="empty-state" style="padding: 3rem 1.5rem;">
+                            <div class="logo-icon-container"
+                                style="margin: 0 auto 1.5rem; width: 64px; height: 64px; font-size: 2rem; background: var(--gray-100); color: var(--gray-400); box-shadow: none;">
+                                <i class="fas fa-plug"></i>
+                            </div>
+                            <h3 style="margin-bottom: 0.5rem;">Connect Your Bank</h3>
+                            <p style="color: var(--gray-500); max-width: 500px; margin: 0 auto 2rem;">
+                                Link your bank account or mobile money to enable automated savings and instant withdrawals to
+                                your preferred platform.
+                            </p>
+
+                            <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+                                <h5
+                                    style="color: var(--gray-700); font-size: 0.875rem; border-bottom: 1px solid var(--gray-200); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                                    <i class="fas fa-shield-alt"></i> Available Secure Integrations
+                                </h5>
+                                <div class="bank-hub-grid">
+                                    <div class="bank-provider-card">
+                                        <i class="fas fa-mobile-alt bank-provider-icon" style="color: #4CAF50;"></i>
+                                        <div class="bank-provider-name">M-PESA G2</div>
+                                    </div>
+                                    <div class="bank-provider-card">
+                                        <i class="fas fa-landmark bank-provider-icon" style="color: #003399;"></i>
+                                        <div class="bank-provider-name">KCB Group</div>
+                                    </div>
+                                    <div class="bank-provider-card">
+                                        <i class="fas fa-landmark bank-provider-icon" style="color: #630000;"></i>
+                                        <div class="bank-provider-name">Equity Bank</div>
+                                    </div>
+                                    <div class="bank-provider-card">
+                                        <i class="fas fa-landmark bank-provider-icon" style="color: #1e40af;"></i>
+                                        <div class="bank-provider-name">Co-op Bank</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                <?php else: ?>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Bank Name</th>
+                                        <th>Account Name</th>
+                                        <th>Account Number</th>
+                                        <th>Branch</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($myBankAccounts as $ba): ?>
+                                            <tr>
+                                                <td><?php echo htmlspecialchars($ba['bank_name']); ?></td>
+                                                <td><?php echo htmlspecialchars($ba['account_name']); ?></td>
+                                                <td><code><?php echo htmlspecialchars($ba['account_number']); ?></code></td>
+                                                <td><?php echo htmlspecialchars($ba['branch_name'] ?? 'N/A'); ?></td>
+                                                <td>
+                                                    <span class="badge badge-<?php echo $ba['is_verified'] ? 'success' : 'warning'; ?>">
+                                                        <i
+                                                            class="fas fa-<?php echo $ba['is_verified'] ? 'check-circle' : 'clock'; ?>"></i>
+                                                        <?php echo $ba['is_verified'] ? 'Verified' : 'Pending'; ?>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

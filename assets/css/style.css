@@ -278,20 +278,20 @@ code {
 .sidebar-logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
 }
 
-.logo-circle {
-    width: 32px;
-    height: 32px;
-    background: var(--primary);
+.logo-icon-container {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
-    font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    font-size: 1rem;
+    border-radius: 12px;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.2);
 }
 
 .logo-text {
@@ -299,16 +299,60 @@ code {
 }
 
 .logo-title {
-    font-size: 0.938rem;
-    font-weight: 700;
+    font-size: 1.125rem;
+    font-weight: 800;
     color: var(--gray-900);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
 }
 
 .logo-subtitle {
     font-size: 0.75rem;
     color: var(--gray-500);
-    font-weight: 500;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Plugin Bank Hub Styles */
+.bank-hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.bank-provider-card {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.bank-provider-card:hover {
+    background: white;
+    border-color: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.bank-provider-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--gray-400);
+}
+
+.bank-provider-card:hover .bank-provider-icon {
+    color: var(--primary);
+}
+
+.bank-provider-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gray-600);
 }
 
 .sidebar-menu {

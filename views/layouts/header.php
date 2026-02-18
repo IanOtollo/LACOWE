@@ -36,10 +36,12 @@ $roleId = Session::getUserRole();
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <div class="logo-circle">L</div>
+                <div class="logo-icon-container">
+                    <i class="fas fa-university"></i>
+                </div>
                 <div class="logo-text">
                     <div class="logo-title">LACOWE</div>
-                    <div class="logo-subtitle">Welfare System</div>
+                    <div class="logo-subtitle">Welfare MIS</div>
                 </div>
             </div>
         </div>
