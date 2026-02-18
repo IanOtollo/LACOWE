@@ -16,10 +16,10 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
     $action = $_GET['action'];
 
     if ($action === 'verify') {
-        $bankAccountModel->updateStatus($id, 1);
+        $bankAccountModel->updateStatus($id, true);
         Session::flash('success', 'Bank account verified successfully.');
     } elseif ($action === 'unverify') {
-        $bankAccountModel->updateStatus($id, 0);
+        $bankAccountModel->updateStatus($id, false);
         Session::flash('info', 'Bank account status set to unverified.');
     } elseif ($action === 'delete') {
         $bankAccountModel->delete($id);

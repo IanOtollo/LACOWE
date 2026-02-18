@@ -2,7 +2,7 @@
 /**
  * ReportGenerator Utility
  * Handles data fetching and CSV conversion for various system reports
- * LACOWE Welfare MIS
+ * LACOWE Welfare MIS - Fixed: PostgreSQL Boolean Parity
  */
 
 require_once __DIR__ . '/Database.php';
@@ -158,7 +158,7 @@ class ReportGenerator
     {
         $sql = "SELECT m.member_number, CONCAT(m.first_name, ' ', m.last_name) as member_name,
                        b.bank_name, b.account_name, b.account_number, b.branch_name, 
-                       CASE WHEN b.is_verified = 1 THEN 'Verified' ELSE 'Pending' END as status
+                       CASE WHEN b.is_verified THEN 'Verified' ELSE 'Pending' END as status
                 FROM bank_accounts b
                 INNER JOIN members m ON b.member_id = m.member_id
                 ORDER BY m.member_number ASC";
