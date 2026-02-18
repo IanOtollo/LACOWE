@@ -23,8 +23,7 @@ class Database
         if (self::$instance === null) {
             $this->connect();
             self::$instance = $this->conn;
-        }
-        else {
+        } else {
             $this->conn = self::$instance;
         }
     }
@@ -33,8 +32,7 @@ class Database
     {
         if ($this->driver === 'pgsql') {
             $dsn = "pgsql:host={$this->host};port={$this->port};dbname={$this->dbname}";
-        }
-        else {
+        } else {
             $dsn = "mysql:host={$this->host};dbname={$this->dbname};charset=utf8mb4";
         }
 
@@ -46,8 +44,7 @@ class Database
 
         try {
             $this->conn = new PDO($dsn, $this->username, $this->password, $options);
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             $this->error = $e->getMessage();
             throw new Exception("Database connection failed: " . $e->getMessage());
         }
@@ -62,8 +59,7 @@ class Database
     {
         try {
             $this->stmt = $this->conn->prepare($sql);
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             throw new Exception("Query preparation failed: " . $e->getMessage());
         }
         return $this;
@@ -89,11 +85,18 @@ class Database
 
         try {
             $this->stmt->bindValue($param, $value, $type);
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             throw new Exception("Parameter binding failed: " . $e->getMessage());
         }
 
+        return $this;
+    }
+
+    public function bindArray($params)
+    {
+        foreach ($params as $param => $value) {
+            $this->bind(':' . ltrim($param, ':'), $value);
+        }
         return $this;
     }
 
@@ -101,8 +104,7 @@ class Database
     {
         try {
             return $this->stmt->execute();
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             throw new Exception("Query execution failed: " . $e->getMessage());
         }
     }
