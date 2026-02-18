@@ -88,5 +88,18 @@ CREATE TABLE transactions (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE bank_accounts (
+    bank_account_id SERIAL PRIMARY KEY,
+    member_id INT NOT NULL REFERENCES members(member_id) ON DELETE CASCADE,
+    bank_name VARCHAR(100) NOT NULL,
+    account_name VARCHAR(100) NOT NULL,
+    account_number VARCHAR(50) NOT NULL,
+    branch_name VARCHAR(100),
+    swift_code VARCHAR(20),
+    is_verified BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Note: Simplified some features for basic Supabase deployment
 -- Remaining tables (loans, repayments, etc.) follow similar SERIAL/ENUM/TIMESTAMP patterns.
