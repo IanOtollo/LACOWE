@@ -12,7 +12,9 @@ try {
     $db = new Database();
     $driver = DB_DRIVER;
 
-    echo "Current Driver: <strong>$driver</strong><br><br>";
+    echo "Current Driver: <strong>$driver</strong><br>";
+    echo "Current Host: <strong>" . DB_HOST . "</strong><br>";
+    echo "Current DB: <strong>" . DB_NAME . "</strong><br><br>";
 
     if ($driver === 'pgsql') {
         $sql = "CREATE TABLE IF NOT EXISTS bank_accounts (
@@ -27,6 +29,7 @@ try {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );";
+        echo "PostgreSQL detected. Preparing to create table if not exists...<br>";
     } else {
         $sql = "CREATE TABLE IF NOT EXISTS bank_accounts (
             bank_account_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -41,12 +44,29 @@ try {
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
         ) ENGINE=InnoDB;";
+        echo "MySQL/MariaDB detected. Preparing to create table if not exists...<br>";
     }
 
-    echo "Executing SQL...<br>";
+    echo "Executing SQL query...<br>";
     $db->getConnection()->exec($sql);
 
-    echo "<h3 style='color: green;'>SUCCESS: 'bank_accounts' table is now ready!</h3>";
+    echo "<h3 style='color: green;'>SUCCESS: 'bank_accounts' table check/creation complete!</h3>";
+
+    // Verify existence
+    if ($driver === 'pgsql') {
+        $stmt = $db->getConnection()->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'bank_accounts'");
+        $check = $stmt->fetchColumn();
+    } else {
+        $stmt = $db->getConnection()->query("SHOW TABLES LIKE 'bank_accounts'");
+        $check = $stmt->rowCount();
+    }
+
+    if ($check) {
+        echo "<p style='color: green;'>Table 'bank_accounts' confirmed to exist in the database.</p>";
+    } else {
+        echo "<p style='color: red;'>Warning: Table 'bank_accounts' was not found even after execution.</p>";
+    }
+
     echo "<p>You can now go back to your <a href='dashboard.php'>Dashboard</a>.</p>";
     echo "<p><strong>Security Note:</strong> Please delete this file (<code>db-setup.php</code>) after use.</p>";
 

@@ -67,11 +67,12 @@ class ReportGenerator
     public function getLoanReport($startDate = null, $endDate = null)
     {
         $sql = "SELECT l.loan_number, m.member_number, CONCAT(m.first_name, ' ', m.last_name) as member_name,
-                       l.loan_type, l.principal_amount, l.interest_rate, l.total_amount, 
+                       la.loan_type, l.principal_amount, l.interest_rate, l.total_amount, 
                        l.amount_paid, l.balance as outstanding_balance, l.loan_status, 
                        l.disbursement_date, l.maturity_date
                 FROM loans l
                 INNER JOIN members m ON l.member_id = m.member_id
+                INNER JOIN loan_applications la ON l.application_id = la.application_id
                 WHERE 1=1";
 
         $params = [];
