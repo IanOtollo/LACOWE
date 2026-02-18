@@ -5,9 +5,9 @@
  * LACOWE Welfare MIS
  */
 
-require_once '../config/config.php';
-require_once '../includes/Auth.php';
-require_once '../includes/ReportGenerator.php';
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../includes/Auth.php';
+require_once __DIR__ . '/../includes/ReportGenerator.php';
 
 Auth::requireAuth();
 Auth::requireRole([1, 2, 3]); // Admin roles only
